@@ -3,15 +3,22 @@ import React, { FC, useEffect, useState } from 'react';
 import { get, post } from '../../../../util/servercall';
 import type { Router } from 'next/router';
 import { Button, Table } from 'antd';
-import { getUserProject, getUserProjectNotassociate } from '../../../../url/admin';
+import {
+  deleteProjectByUser,
+  getUserProject,
+  getUserProjectNotassociate,
+} from '../../../../url/admin';
 import ProjectRoleAssociation from '../../projects/ProjectToolsAssociation/ProjectToolsAssociation';
 import UserProjectAssociation from '../UserProjectAssociation/UserProjectAssociation';
+import DeAllocateItem from '../../../Actions/DeAllocateItem';
+import { Modules } from '../../../../type/module';
 
 interface Props {
   router: Router;
 }
 
 const UserProject: FC<Props> = (props) => {
+  const id = props.router.query.id as string;
   const [userProject, setUserProject] = useState([]);
   const [notAssociateProject, setNotAssociateProject] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -25,8 +32,6 @@ const UserProject: FC<Props> = (props) => {
   };
 
   const onComponentUpdate = () => {
-    const id = props.router.query.id as string;
-
     setLoading(true);
     get(getUserProject(id)).then((response) => {
       setUserProject(response.data.projects);
@@ -34,7 +39,7 @@ const UserProject: FC<Props> = (props) => {
     });
 
     get(getUserProjectNotassociate(id)).then((response) => {
-        setNotAssociateProject(response.data);
+      setNotAssociateProject(response.data);
     });
   };
 
@@ -47,6 +52,22 @@ const UserProject: FC<Props> = (props) => {
       title: 'Project Name',
       key: 'project_name',
       dataIndex: 'display_name',
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record: any) => {
+        return (
+          <DeAllocateItem
+            path={`/admin/users/${id}`}
+            module={Modules.USER}
+            deletePath={deleteProjectByUser(id)}
+            onComponentUpdate={onComponentUpdate}
+            body={{ project_id: record.id }}
+          />
+        );
+      },
+      width: '20%',
     },
   ];
 

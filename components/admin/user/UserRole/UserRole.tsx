@@ -4,13 +4,21 @@ import { get, post } from '../../../../util/servercall';
 import type { Router } from 'next/router';
 import { Button, Table } from 'antd';
 import UserRoleAssociation from '../UserRoleAssociation/UserRoleAssociation';
-import { getUserRole, getUserRoleNotassociate } from '../../../../url/admin';
+import {
+  deleteRoleByUser,
+  getUserRole,
+  getUserRoleNotassociate,
+} from '../../../../url/admin';
+import { Modules } from '../../../../type/module';
+import DeAllocateItem from '../../../Actions/DeAllocateItem';
 
 interface Props {
   router: Router;
 }
 
-const UserRole: FC<Props> = (props) => {
+const UserRole: FC<Props> = ({ router }) => {
+  const id = router.query.id as string;
+
   const [userRole, setUserRole] = useState([]);
   const [notAssociateRole, setNotAssociateRole] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -24,8 +32,6 @@ const UserRole: FC<Props> = (props) => {
   };
 
   const onComponentUpdate = () => {
-    const id = props.router.query.id as string;
-
     setLoading(true);
     get(getUserRole(id)).then((response) => {
       setUserRole(response.data.roles);
@@ -47,6 +53,22 @@ const UserRole: FC<Props> = (props) => {
       key: 'name',
       dataIndex: 'name',
     },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (record: any) => {
+        return (
+          <DeAllocateItem
+            path={`/admin/users/${id}`}
+            module={Modules.USER}
+            deletePath={deleteRoleByUser(id)}
+            onComponentUpdate={onComponentUpdate}
+            body={{ role_id: record.id }}
+          />
+        );
+      },
+      width: '20%',
+    },
   ];
 
   const onHandleUserAddClick = () => {
@@ -54,7 +76,7 @@ const UserRole: FC<Props> = (props) => {
   };
 
   const onHandleFinish = (values: { role_id: number }) => {
-    const id = props.router.query.id as string;
+    const id = router.query.id as string;
     post(getUserRole(id), values).then((response) => {
       onComponentUpdate();
       onClose();
