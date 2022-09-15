@@ -101,6 +101,10 @@ export const PROJECT_UPDATE = "/api/v1/projects/update";
 export const PROJECT_DELETE = "/api/v1/projects/delete";
 export const PROJECT_GETBYID = "/api/v1/projects/";
 
+export const deleteToolsByProject = (id: string) => {
+  return `/api/v1/projects/${id}/tools/delete`;
+};
+
 export const designationToolsURL = (id: string) => {
   return `/api/v1/projects/${id}/designations/tools`;
 };
@@ -120,4 +124,5 @@ export const getProjectKtLinks = (id: string) => {
   return `/api/v1/kt_links/getall?project_id=${id}`;
 };
 
+export const deleteKTLink = "/api/v1/kt_links/delete";
 export const createProjectKtLinks = `/api/v1/kt_links/`;
