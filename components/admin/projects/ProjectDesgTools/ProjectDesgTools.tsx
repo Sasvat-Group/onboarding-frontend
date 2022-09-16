@@ -2,7 +2,7 @@ import { withRouter } from 'next/router';
 import React, { FC, useEffect, useState } from 'react';
 import { get, post } from '../../../../util/servercall';
 import type { Router } from 'next/router';
-import { Button, Form, Table } from 'antd';
+import { Button, Form, Table, Tag } from 'antd';
 import ProjectDesgToolsAssociation from '../ProjectDesgToolsAssociation/ProjectDesgToolsAssociation';
 import { allDesignationToolsURL, createProjectKtLinks, designationToolsURL, DESIGNATION_GETALL } from '../../../../url/admin';
 
@@ -50,13 +50,20 @@ const ProjectDesgTools: FC<Props> = (props) => {
   const columns = [
     {
       title: 'Designation',
-      key: 'desn_name',
-      dataIndex: 'desn_name',
+      key: 'designation_name',
+      dataIndex: 'designation_name',
     },
     {
         title: "Tool",
-        key: 'tool_name',
-        dataIndex: 'tool_name',
+        key: 'tools',
+        dataIndex: 'tools',
+        render: (tools: [string]) => {
+          return (
+            tools.map((tool: string) => <Tag color="blue" key={tool}>
+                {tool}
+              </Tag>)
+          )
+        }
     }
   ];
 
