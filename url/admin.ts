@@ -109,6 +109,13 @@ export const designationToolsURL = (id: string) => {
   return `/api/v1/projects/${id}/designations/tools`;
 };
 
+export const getDesignatiionTools = (
+  projectId: string,
+  designationId: string
+) => {
+  return `/api/v1/projects/${projectId}/designations/tools?designation_id=${designationId}`;
+};
+
 export const allDesignationToolsURL = (id: string) => {
   return `/api/v1/projects/${id}/designations/all_tools`;
 };
