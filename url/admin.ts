@@ -133,3 +133,5 @@ export const getProjectKtLinks = (id: string) => {
 
 export const deleteKTLink = "/api/v1/kt_links/delete";
 export const createProjectKtLinks = `/api/v1/kt_links/`;
+
+export const Status_GETALL = "/api/v1/req_status/getall";

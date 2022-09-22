@@ -104,7 +104,7 @@ const Login = () => {
         </div>
         <div className="flex w-1/2 flex-col justify-center bg-gradient-to-r from-gray-600 to-gray-900 shadow-2xl md:hidden">
           <div className="mx-auto w-3/5 text-center">
-            <h1 className="text-gray-300">Welcome to Onboarding Plateform</h1>
+            <h1 className="text-gray-300">Welcome to Onboarding Platform</h1>
             <p className="text-lg text-gray-400">
               Enhance the Onboarding Process.
             </p>

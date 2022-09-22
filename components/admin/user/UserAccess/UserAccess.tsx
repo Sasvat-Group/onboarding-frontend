@@ -19,6 +19,7 @@ interface Props {
 }
 
 const UserAccess: FC<Props> = (props) => {
+  const [form] = Form.useForm()
   const [project, setProject] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [userData, setUserData] = useState([]);
@@ -103,10 +104,10 @@ const UserAccess: FC<Props> = (props) => {
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    // post(SendAccessRequest, values).then((response) => {
-    //   router.push(`/admin/users`);
-    //   // form.resetFields()
-    // });
+    post(SendAccessRequest, values).then((response) => {
+      form.resetFields();
+      router.push(`/admin/users`);
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -114,7 +115,7 @@ const UserAccess: FC<Props> = (props) => {
   };
 
   const onChange = (checkedValues: CheckboxValueType[]) => {
-    console.log("checked = ", checkedValues);
+    console.log("checked = ", checkedValues, typeof(checkedValues[0]));
     setDesignationTools(checkedValues);
   };
 
@@ -135,7 +136,7 @@ const UserAccess: FC<Props> = (props) => {
   const parseArray = (inputArray: [], label: string, value: string) => {
     let result = inputArray.map((el) => ({
       label: el[label],
-      value: el[value],
+      value: el[label],
     }));
 
     return result;
@@ -143,12 +144,13 @@ const UserAccess: FC<Props> = (props) => {
 
   const handleChangeDesignation = async (value: string) => {
     if (value !== undefined) {
+      console.log(form.getFieldsValue())
       const response = await get(getDesignatiionTools(project, value));
       console.log("tolls desin----", response.data);
       let result =
         response.data.selcted_desgn_tools_obj &&
-        response.data.selcted_desgn_tools_obj.map((el: any) => el.tool_id);
-
+        response.data.selcted_desgn_tools_obj.map((el: any) => el.tool_name);
+        form.setFieldValue("project_tools",result)  
       setDesignationTools(result);
     } else setDesignationTools([]);
   };
@@ -178,6 +180,7 @@ const UserAccess: FC<Props> = (props) => {
                 name="userdata"
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 16 }}
+                form = {form}
                 initialValues={{
                   id: userData.id,
                   first_name: userData.first_name,
@@ -185,12 +188,18 @@ const UserAccess: FC<Props> = (props) => {
                   email: userData.email,
                   employee_id: userData.employee_id,
                   base_location: userData.base_location,
+                  project_tools: [],
+                  project_id: project
                 }}
                 onFinish={onFinish}
                 onFinishFailed={onFinishFailed}
                 autoComplete="off"
               >
                 <Form.Item label="ID" name="id" hidden={true}>
+                  <Input hidden={true} />
+                </Form.Item>
+
+                <Form.Item label="project_id" name="project_id" hidden={true}>
                   <Input hidden={true} />
                 </Form.Item>
 
@@ -256,7 +265,7 @@ const UserAccess: FC<Props> = (props) => {
                   >
                     {console.log("configration ---", configurationUserData)}
                     {configurationUserData.map((cm) => (
-                      <Option key={cm.email} value={cm.employee_id}>
+                      <Option key={cm.email} value={cm.email}>
                         {cm.email}
                       </Option>
                     ))}
@@ -270,7 +279,7 @@ const UserAccess: FC<Props> = (props) => {
                     onChange={handleChangeDesignation}
                   >
                     {designations.map((item) => (
-                      <Option key={item.id}>{item.display_name}</Option>
+                      <Option key={item.id} value={item.id}>{item.display_name}</Option>
                     ))}
                   </Select>
                 </Form.Item>
@@ -278,7 +287,7 @@ const UserAccess: FC<Props> = (props) => {
                   <Checkbox.Group
                     style={{ width: "100%" }}
                     onChange={onChange}
-                    value={designationTools}
+                    // value={[7]}
                     options={prjToolsData}
                   >
                     {console.log(

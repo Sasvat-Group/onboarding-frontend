@@ -55,4 +55,10 @@ export default [
     module: Modules.PERMISSION,
     permission: Permissions.VIEW,
   },
+  {
+    path: '/admin/status',
+    icon: <LockOutlined />,
+    module: Modules.STATUS,
+    permission: Permissions.VIEW,
+  }
 ];
