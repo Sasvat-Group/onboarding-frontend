@@ -39,7 +39,7 @@ export enum ModuleDisplayText {
     subscriber = "Subscriber",
     user = "User",
     roles = "Role", 
-    PROJECTS = "projects",
+    projects = "projects",
     commodity = "Commodity",
     tools = "tools",
     designations ="designations",

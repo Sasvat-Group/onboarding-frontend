@@ -8,7 +8,7 @@ export interface PermissionDataWithID extends PermissionFormData {
 }
 
 export enum Permissions {
-    VIEW = "view",
+    VIEW = "read",
     ADD = "add",
     EDIT = "edit",
     DELETE = "delete",
